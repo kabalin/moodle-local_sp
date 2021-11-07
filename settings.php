@@ -38,4 +38,28 @@ if ($hassiteconfig) {
     $settings->add(new admin_setting_configmultiselect('local_sp/autocompletioncourses',
                 new lang_string('autocompletioncourses', 'local_sp'),
                 new lang_string('autocompletioncourses_desc', 'local_sp'), [], $options));
+
+    if (has_capability('moodle/role:assign', context_system::instance())) {
+        $settings->add(new admin_setting_heading('local_sp/systemrolesync',
+                    new lang_string('systemrolesync', 'local_sp'), ''));
+
+        $courses = core_course_category::search_courses(['onlywithcompletion' => true]);
+        $options = array_combine(array_column($courses, 'id'), array_column($courses, 'fullname'));
+        $options = [0 => get_string('none')] + $options;
+        $settings->add(new admin_setting_configselect('local_sp/systemrolesynccourse',
+                    new lang_string('course'),
+                    new lang_string('systemrolesynccourse_desc', 'local_sp'), 0, $options));
+
+        $roles = get_roles_for_contextlevels(CONTEXT_COURSE);
+        $options = role_fix_names(array_flip($roles), null, null, true);
+        $settings->add(new admin_setting_configselect('local_sp/systemrolesynccourserole',
+                    new lang_string('systemrolesynccourserole', 'local_sp'),
+                    new lang_string('systemrolesynccourserole_desc', 'local_sp'), '', $options));
+
+        $roles = get_roles_for_contextlevels(CONTEXT_SYSTEM);
+        $options = role_fix_names(array_flip($roles), null, null, true);
+        $settings->add(new admin_setting_configselect('local_sp/systemrolesynctargetrole',
+                    new lang_string('systemrolesynctargetrole', 'local_sp'),
+                    new lang_string('systemrolesynctargetrole_desc', 'local_sp'), '', $options));
+    }
 }

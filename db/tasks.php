@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details
+ * Tasks definition.
  *
  * @package   local_sp
  * @author    Ruslan Kabalin <ruslan.kabalin@gmail.com>
@@ -23,8 +23,17 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+defined('MOODLE_INTERNAL') || die;
 
-$plugin->version   = 2021110800;
-$plugin->requires  = 2020110907; // Requires Moodle 3.10.
-$plugin->component = 'local_sp';
+$tasks = [
+    [
+        'classname' => 'local_sp\task\sync_system_roles',
+        'blocking' => 0,
+        'minute' => '0',
+        'hour' => '3',
+        'day' => '*',
+        'dayofweek' => '*',
+        'month' => '*',
+        'disabled' => false
+    ],
+];
