@@ -62,4 +62,12 @@ if ($hassiteconfig) {
                     new lang_string('systemrolesynctargetrole', 'local_sp'),
                     new lang_string('systemrolesynctargetrole_desc', 'local_sp'), '', $options));
     }
+
+    if (\core_component::get_plugin_directory('local', 'autogroup')) {
+        $settings->add(new admin_setting_heading('local_sp/autogrouptask',
+            new lang_string('autogrouptask', 'local_sp'), ''));
+        $url = new moodle_url('/admin/tool/task/scheduledtasks.php', ['action' => 'edit', 'task' => 'local_sp\\task\\sync_autogroups']);
+        $settings->add(new admin_setting_description('local_sp/autogrouptaskdesc',
+            '', new lang_string('autogrouptaskdesc', 'local_sp', $url->out())));
+    }
 }

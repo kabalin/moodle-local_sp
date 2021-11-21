@@ -28,6 +28,8 @@ defined('MOODLE_INTERNAL') || die();
 $string['autocompletion'] = 'Courses automatic completion';
 $string['autocompletioncourses'] = 'Courses automatic completion on enrolment';
 $string['autocompletioncourses_desc'] = 'Select course that will be marked as completed when user is enrolled using completion enrolment method. This is to faciliate automatic re-completion.';
+$string['autogrouptask'] = 'Autogroup sync task';
+$string['autogrouptaskdesc'] = 'Autogroup sync task is designed to re-sync autogroup membership on regular basis. When user profile fields are changed not using API, autogroup plugin doesn\'t know about changes and can\'t update groups, this task does it in bulk for every course and user. Navigate to sheduled tasks adminstration to <a href="{$a}">configure</a> the task.';
 $string['defaultsettings'] = 'SP default settings';
 $string['pluginname'] = 'SP local helpers collection';
 $string['privacy:metadata'] = 'SP plugin does not store any personal data.';
