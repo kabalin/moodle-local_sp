@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace local_sp\task;
-use \local_autogroup\usecase;
+use \local_autogroup\domain;
 
 /**
  * Task function to sync autogroups.
@@ -49,14 +49,24 @@ class sync_autogroups extends \core\task\scheduled_task {
      */
     public function execute() {
         global $DB;
-        // Raise PHP time limit and memory limit to avoid getting memory exhausted error.
-        \core_php_time_limit::raise();
-        raise_memory_limit(MEMORY_HUGE);
+        if (get_config('local_autogroup', 'enabled')) {
+            // Raise PHP time limit and memory limit to avoid getting memory exhausted error.
+            \core_php_time_limit::raise();
+            raise_memory_limit(MEMORY_HUGE);
 
-        $courses = get_courses();
-        foreach (array_keys($courses) as $courseid) {
-            $usecase = new usecase\verify_course_group_membership($courseid, $DB);
-            $usecase();
+            $courses = get_courses();
+            foreach (array_keys($courses) as $courseid) {
+                $course = new domain\course($courseid, $DB);
+                $enrolledusers = \get_enrolled_users(\context_course::instance($courseid));
+                foreach ($enrolledusers as $user) {
+                    try {
+                        $course->verify_user_group_membership($user, $DB);
+                    } catch (\Exception $e) {
+                        mtrace("Error while processing user {$user->id} in course {$courseid}: " . $e->getMessage());
+                        mtrace($e->getTraceAsString());
+                    }
+                }
+            }
         }
     }
 }
