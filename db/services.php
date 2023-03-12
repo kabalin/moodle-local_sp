@@ -15,16 +15,21 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details
+ * local_sp external functions and service definitions.
  *
  * @package   local_sp
  * @author    Ruslan Kabalin <ruslan.kabalin@gmail.com>
- * @copyright 2021 Swiss Post Ltd {@link https://www.post.ch}
+ * @copyright 2023 Swiss Post Ltd {@link https://www.post.ch}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die;
 
-defined('MOODLE_INTERNAL') || die();
-
-$plugin->version   = 2023031200;
-$plugin->requires  = 2020110900; // Requires Moodle 3.10.
-$plugin->component = 'local_sp';
+$functions = [
+    'local_sp_get_course_completion_status' => [
+        'classname' => \local_sp\external\local_sp_get_course_completion_status::class,
+        'methodname' => 'execute',
+        'description' => 'Get course completion status for all enrolled users',
+        'type' => 'read',
+        'capabilities' => 'report/completion:view',
+    ],
+];
