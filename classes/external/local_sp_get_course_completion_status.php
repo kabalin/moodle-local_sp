@@ -79,11 +79,24 @@ class local_sp_get_course_completion_status extends external_api {
         }
 
         // Query database directly, we can't use completion API, too expensive for 10k+ completion records.
-        $select = 'course = ?';
-        if ($params['completedonly']) {
-            $select .= ' AND timecompleted IS NOT NULL';
-        }
-        $completions = $DB->get_records_select('course_completions', $select, [$course->id], 'userid');
+        $where = $params['completedonly'] ? ' AND crc.timecompleted IS NOT NULL ' : '';
+        $sql = "SELECT u.id AS userid, crc.timecompleted AS timecompleted
+                  FROM {user} u
+            INNER JOIN {user_enrolments} ue ON ue.userid = u.id
+            INNER JOIN {enrol} e ON e.id = ue.enrolid
+            INNER JOIN {course} c ON c.id = e.courseid
+             LEFT JOIN {course_completions} crc ON crc.course = c.id AND crc.userid = u.id
+                 WHERE c.enablecompletion = 1
+                   AND c.id = ?
+                   AND ue.status = 0
+                   AND e.status = 0
+                   AND u.deleted = 0
+                   AND ue.timestart < ?
+                   AND (ue.timeend > ? OR ue.timeend = 0)
+                   {$where}
+              ORDER BY userid";
+        $now = time();
+        $completions = $DB->get_recordset_sql($sql, [$course->id, $now, $now]);
 
         // Record result.
         $result = [];
@@ -104,7 +117,7 @@ class local_sp_get_course_completion_status extends external_api {
                 [
                     'userid'        => new external_value(PARAM_INT, 'User ID'),
                     'completed'     => new external_value(PARAM_BOOL, 'true if the course is completed, false otherwise'),
-                ], 'Course completion status', VALUE_DEFAULT, []
+                ], 'Course completion status for active enrolments', VALUE_DEFAULT, []
             )
         );
     }

@@ -25,6 +25,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2023031200;
+$plugin->version   = 2023040200;
 $plugin->requires  = 2020110900; // Requires Moodle 3.10.
 $plugin->component = 'local_sp';
