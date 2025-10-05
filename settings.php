@@ -26,7 +26,6 @@
 defined('MOODLE_INTERNAL') || die;
 
 if ($hassiteconfig) {
-    global $CFG;
     $settings = new admin_settingpage('local_sp', new lang_string('defaultsettings', 'local_sp'));
     $ADMIN->add('localplugins', $settings);
 
@@ -51,13 +50,13 @@ if ($hassiteconfig) {
                     new lang_string('systemrolesynccourse_desc', 'local_sp'), 0, $options));
 
         $roles = get_roles_for_contextlevels(CONTEXT_COURSE);
-        $options = role_fix_names(array_flip($roles), null, null, true);
+        $options = role_fix_names(array_flip($roles), null, ROLENAME_ALIAS, true);
         $settings->add(new admin_setting_configselect('local_sp/systemrolesynccourserole',
                     new lang_string('systemrolesynccourserole', 'local_sp'),
                     new lang_string('systemrolesynccourserole_desc', 'local_sp'), '', $options));
 
         $roles = get_roles_for_contextlevels(CONTEXT_SYSTEM);
-        $options = role_fix_names(array_flip($roles), null, null, true);
+        $options = role_fix_names(array_flip($roles), null, ROLENAME_ALIAS, true);
         $settings->add(new admin_setting_configselect('local_sp/systemrolesynctargetrole',
                     new lang_string('systemrolesynctargetrole', 'local_sp'),
                     new lang_string('systemrolesynctargetrole_desc', 'local_sp'), '', $options));

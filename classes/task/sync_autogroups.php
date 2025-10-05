@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace local_sp\task;
-use \local_autogroup\domain;
+use local_autogroup\domain\course;
 
 /**
  * Task function to sync autogroups.
@@ -56,7 +56,7 @@ class sync_autogroups extends \core\task\scheduled_task {
 
             $courses = get_courses();
             foreach (array_keys($courses) as $courseid) {
-                $course = new domain\course($courseid, $DB);
+                $course = new course($courseid, $DB);
                 $enrolledusers = \get_enrolled_users(\context_course::instance($courseid));
                 foreach ($enrolledusers as $user) {
                     try {
